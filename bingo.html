@@ -52,7 +52,7 @@
     padding: 0px;
     margin: 0px;
   }
-  h1 {
+  h1, h3 {
     text-align: center;
   }
   button#print {
@@ -65,8 +65,16 @@
   input#printcount {
     width: 35px;
   }
+  div#editpane {
+    width: 600px;
+    margin: auto;
+  }
+  textarea#words {
+    width: 100%;
+    height: 300px;
+  }
   @media print {
-    a, h1, button, span#links { display: none; }
+    h1, div#editpane { display: none; }
     /** Print each container div on a separate page. */
     container { page-break-after: always; }
   }
@@ -90,13 +98,47 @@
   </tbody>
 </table>
 </container>
-<a href="#" title="Generate a new board" id="new">New board</a></br>
+
+<div id="editpane">
+<h3><a href="#" title="Generate a new board" id="new">New board</a></h3>
+<h3>Custom squares, one per line</h3>
+<textarea id="words">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Integer eget enim cursus, ultrices quam a, tincidunt dolor.
+Duis id justo cursus, venenatis nunc et, luctus augue.
+Maecenas vehicula leo in sem bibendum imperdiet id at nisi.
+Phasellus id lorem mollis, varius lectus laoreet, porttitor est.
+Morbi in elit et enim consequat mollis.
+Donec vel odio quis mauris pharetra convallis et et enim.
+Ut quis velit et nunc eleifend suscipit.
+Nullam sed sem bibendum dolor viverra ullamcorper.
+Cras cursus dolor sit amet vulputate lobortis.
+Aliquam ac urna vel justo lobortis malesuada sed dignissim felis.
+Nam ut dui et tellus viverra efficitur.
+Mauris vitae elit nec tellus varius suscipit a at erat.
+In ac leo rutrum, porttitor sapien vitae, pretium ligula.
+Nam ac mauris vitae nibh laoreet euismod.
+Etiam interdum nulla vitae tincidunt gravida.
+Praesent quis nunc id nisl accumsan scelerisque.
+Cras ac erat id leo tristique viverra ut vel nisl.
+Sed id purus posuere, luctus arcu a, sodales sem.
+Quisque pharetra lorem vel magna laoreet tincidunt.
+Donec sed metus at sem sodales dignissim nec in nisl.
+Nulla quis purus ornare, ornare augue in, varius sapien.
+Fusce at dolor ac elit mollis tempus et tempus arcu.
+Mauris ac nunc sed nulla molestie pulvinar.
+Proin ut arcu eu erat hendrerit consectetur.</textarea>
 <button id="print">Print <input id="printcount" type="number" min="1" max="99" value="10"></input> boards</button>
+</div>
+
 </body>
 <script type="text/javascript">
-var squares = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
+// selectSquares selects 24 random squares, duplicating if necessary.
 function selectSquares() {
+  var squares = document.getElementById('words').value.split('\n').filter(function(s) { return s != undefined });
+  while (squares.length < 24) {
+    Array.prototype.push.apply(squares, squares);
+  }
   squares.sort(function(a, b) {
     return Math.round(Math.random())-0.5;
   });
@@ -113,7 +155,6 @@ function newBoard(id) {
 newBoard('container');
 
 document.getElementById('new').onclick = function() {
-  ga('send', 'event', 'board', 'refresh');
   newBoard('container');
 };
 
